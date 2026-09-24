@@ -1,0 +1,62 @@
+[project]
+name = "my-project"
+version = "0.1.0"
+description = "A short description of what this project does."
+readme = "README.md"
+license = "MIT"
+authors = [{ name = "Clément Vurpillot" }]
+requires-python = ">=3.12"
+dependencies = []
+
+[project.scripts]
+my-project = "my_project.cli:main"
+
+[dependency-groups]
+dev = [
+    "mypy>=1.11",
+    "pre-commit>=4.0",
+    "pytest>=8.3",
+    "pytest-cov>=5.0",
+    "ruff>=0.6",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+# --------------------------------------------------------------------------- #
+# Ruff — linter + formatter (replaces flake8, isort, black, pyupgrade)
+# --------------------------------------------------------------------------- #
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+
+[tool.ruff.lint]
+select = [
+    "E", "W",  # pycodestyle
+    "F",       # pyflakes: unused imports, undefined names…
+    "I",       # isort: import ordering
+    "B",       # flake8-bugbear: likely bugs
+    "UP",      # pyupgrade: modern syntax
+    "SIM",     # flake8-simplify
+    "N",       # pep8-naming
+    "RUF",     # ruff-specific rules
+]
+
+# --------------------------------------------------------------------------- #
+# Mypy — static type checking
+# --------------------------------------------------------------------------- #
+[tool.mypy]
+strict = true
+files = ["src", "tests"]
+
+# --------------------------------------------------------------------------- #
+# Pytest + coverage
+# --------------------------------------------------------------------------- #
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-ra --strict-markers --cov=my_project --cov-report=term-missing"
+
+[tool.coverage.report]
+fail_under = 80
+exclude_also = ["if __name__ == .__main__.:"]
