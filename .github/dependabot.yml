@@ -1,4 +1,4 @@
-# Opens a PR once a week when a GitHub Action or a Python dependency has a new version.
+# Opens a PR once a week when an Action, a Python dependency or a Docker base image has a new version.
 version: 2
 updates:
   - package-ecosystem: github-actions
@@ -9,3 +9,14 @@ updates:
     directory: /
     schedule:
       interval: weekly
+  - package-ecosystem: docker
+    directory: /
+    schedule:
+      interval: weekly
+    ignore:
+      # The Python version must change in the builder image, the runtime image and
+      # pyproject.toml together — do it by hand, not through a one-file bump.
+      - dependency-name: python
+        update-types: ["version-update:semver-major", "version-update:semver-minor"]
+      - dependency-name: astral-sh/uv
+        update-types: ["version-update:semver-major", "version-update:semver-minor"]
